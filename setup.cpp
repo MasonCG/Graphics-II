@@ -152,12 +152,12 @@ void setup(Globals* globs)
 
     globs->skyboxEnviormentMap = ImageManager::loadCube(
         {
-            "assets/kitchenMap/nx.jpg",
-            "assets/kitchenMap/ny.jpg",
-            "assets/kitchenMap/nz.jpg",
-            "assets/kitchenMap/px.jpg",
-            "assets/kitchenMap/py.jpg",
-            "assets/kitchenMap/pz.jpg"
+            "assets/skymap/nx.jpg",
+            "assets/skymap/ny.jpg",
+            "assets/skymap/nz.jpg",
+            "assets/skymap/px.jpg",
+            "assets/skymap/py.jpg",
+            "assets/skymap/pz.jpg"
         }
     );
 
