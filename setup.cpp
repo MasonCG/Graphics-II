@@ -167,6 +167,8 @@ void setup(Globals* globs)
 
    // shadows code
 
+    //globs->flattenMatrix
+
 
 
     globs->pipelineNonFloor = new GraphicsPipeline(
