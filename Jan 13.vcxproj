@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BillboardCollection.cpp" />
     <ClCompile Include="BlitSquare.cpp" />
     <ClCompile Include="BlurrableFramebuffer.cpp" />
     <ClCompile Include="Buffers.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="vkhelpers.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BillboardCollection.h" />
     <ClInclude Include="BlitSquare.h" />
     <ClInclude Include="BlurrableFramebuffer.h" />
     <ClInclude Include="Buffers.h" />
@@ -216,6 +218,7 @@
     <ClInclude Include="Samplers.h" />
     <ClInclude Include="setup.h" />
     <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="shaders\importantconstants.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="stb_image_resize.h" />
     <ClInclude Include="stb_image_write.h" />
@@ -231,6 +234,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini" />
+    <None Include="shaders\blacksun.frag" />
+    <None Include="shaders\blacksun.vert" />
+    <None Include="shaders\blit.frag" />
+    <None Include="shaders\blit.vert" />
+    <None Include="shaders\flare.frag" />
+    <None Include="shaders\flare.vert" />
+    <None Include="shaders\main.frag" />
+    <None Include="shaders\main.vert" />
+    <None Include="shaders\shadow.frag" />
+    <None Include="shaders\shadow.vert" />
+    <None Include="shaders\sky.frag" />
+    <None Include="shaders\sky.vert" />
+    <None Include="shaders\text.frag" />
+    <None Include="shaders\text.vert" />
+    <None Include="shaders\whitesun.frag" />
+    <None Include="shaders\whitesun.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="shaders\pushconstants.txt" />
+    <Text Include="shaders\textpushconstants.txt" />
+    <Text Include="shaders\uniforms.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -60,3 +60,16 @@ void BlitSquare::draw(VulkanContext* ctx, VkCommandBuffer cmd,
 
     ctx->endCmdRegion(cmd);
 }
+
+void BlitSquare::drawInstanced(VkCommandBuffer cmd,
+    unsigned numInstances)
+{
+    vkCmdDrawIndexed(
+        cmd,
+        6,              //index count
+        numInstances,              //instance count
+        this->drawinfo.indexOffset,
+        this->drawinfo.vertexOffset,
+        0               //first instance
+    );
+}

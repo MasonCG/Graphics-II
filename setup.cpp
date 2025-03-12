@@ -7,6 +7,7 @@
 #include "gltf.h"
 #include "Text.h"
 #include "BlitSquare.h"
+#include "BillboardCollection.h"
 
 void setup(Globals* globs)
 {
@@ -109,12 +110,14 @@ void setup(Globals* globs)
                                 EMISSIVE_TEXTURE_SLOT),
             DescriptorSetEntry(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
                                 NORMAL_TEXTURE_SLOT),
-             DescriptorSetEntry(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
+            DescriptorSetEntry(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
                                 METALLICROUGHNESS_TEXTURE_SLOT),
             DescriptorSetEntry(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
                                 ENVMAP_TEXTURE_SLOT),
-             DescriptorSetEntry(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
-                                SUNFBO_TEXTURE_SLOT)
+            DescriptorSetEntry(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
+                                SUNFBO_TEXTURE_SLOT),
+            DescriptorSetEntry(VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER,
+                    BILLBOARD_TEXTURE_SLOT)
         }
     );
 
@@ -136,6 +139,38 @@ void setup(Globals* globs)
         PipelineOption{ .shader = ShaderManager::load("shaders/main.vert") },
         PipelineOption{ .shader = ShaderManager::load("shaders/main.frag") },
         PipelineOption{ .vertexInputState = globs->vertexManager->inputState }
+    );
+
+    //billboard code
+    
+    globs->pipelineDrawBillboards = new GraphicsPipeline(
+        globs->ctx,
+        "draw billboards",
+        globs->pipelineLayout,
+        PipelineOption{ .shader = ShaderManager::load("shaders/billboard.vert") },
+        PipelineOption{ .shader = ShaderManager::load("shaders/billboard.frag") },
+        PipelineOption{ .blendEnable = 1 },
+        PipelineOption{ .srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA },
+        PipelineOption{ .dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA },
+        PipelineOption{ .vertexInputState = globs->vertexManager->inputState }
+    );
+    
+    globs->billboardCollection = new BillboardCollection(
+        globs->ctx,
+        globs->vertexManager,
+        {
+            {-1.0f, 0.0f, 0.0f, 1.0f},
+            {-0.5f, 0.0f, 0.0f, 1.0f},
+            {0.5f, 0.0f, 0.0f, 1.0f},
+            {-1.0f, 0.5f, 0.0f, 1.0f},
+            {-0.5f, 0.5f, 0.0f, 1.0f},
+            {0.5f, 0.5f, 0.0f, 1.0f},
+            {-1.0f, 1.0f, 0.0f, 1.0f},
+            {-0.5f, 1.0f, 0.0f, 1.0f},
+            {0.5f, 1.0f, 0.0f, 1.0f},
+            {1.0f, 1.0f, 0.0f, 1.0f}
+        },
+        ImageManager::load("assets/nova.png")
     );
 
     // skybox code

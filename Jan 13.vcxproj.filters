@@ -138,6 +138,9 @@
     <ClCompile Include="BlitSquare.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BillboardCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BlurrableFramebuffer.h">
@@ -284,10 +287,37 @@
     <ClInclude Include="BlitSquare.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="BillboardCollection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shaders\importantconstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="shaders\blacksun.frag" />
+    <None Include="shaders\blacksun.vert" />
+    <None Include="shaders\blit.frag" />
+    <None Include="shaders\blit.vert" />
+    <None Include="shaders\flare.frag" />
+    <None Include="shaders\flare.vert" />
+    <None Include="shaders\main.frag" />
+    <None Include="shaders\main.vert" />
+    <None Include="shaders\shadow.frag" />
+    <None Include="shaders\shadow.vert" />
+    <None Include="shaders\sky.frag" />
+    <None Include="shaders\sky.vert" />
+    <None Include="shaders\text.frag" />
+    <None Include="shaders\text.vert" />
+    <None Include="shaders\whitesun.frag" />
+    <None Include="shaders\whitesun.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="shaders\pushconstants.txt" />
+    <Text Include="shaders\textpushconstants.txt" />
+    <Text Include="shaders\uniforms.txt" />
   </ItemGroup>
 </Project>

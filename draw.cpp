@@ -7,6 +7,7 @@
 #include "shaders/importantconstants.h"
 #include "BlitSquare.h"
 #include "Framebuffer.h"
+#include "BillboardCollection.h"
 
 
 // flare lab
@@ -65,15 +66,15 @@ void draw(Globals* globs)
     globs->whiteSunPipe->use(cmd);
     globs->blitSquare->draw(globs->ctx, cmd, globs->descriptorSet, nullptr);
 
-
-
-
     globs->sunfbo->endRenderPass(cmd);
-
+    
+    
 
     globs->text->update(cmd);
 
     globs->offscreen->beginRenderPassClearContents(cmd, 0, 1, 0, 1); //0.2f, 0.4f, 0.6f, 1.0f );
+
+    
 
     globs->descriptorSet->bind(cmd);
     globs->vertexManager->bindBuffers(cmd);
@@ -111,8 +112,15 @@ void draw(Globals* globs)
         globs->pushConstants
     );
 
-    globs->text->draw(cmd);
+    //billboard draw
+    globs->pipelineDrawBillboards->use(cmd);
+    //can translate entire billboard system around as a unit
+    //with worldMatrix
+    globs->pushConstants->set(cmd, "worldMatrix",
+        mat4::identity());
+    globs->billboardCollection->draw(cmd, globs->descriptorSet);
 
+    globs->text->draw(cmd);
 
     globs->offscreen->endRenderPass(cmd);
 

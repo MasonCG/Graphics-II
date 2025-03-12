@@ -24,6 +24,7 @@ class GraphicsPipeline;
 class Image;
 class BlitSquare;
 class BlurrableFramebuffer;
+class BillboardCollection;
 
 
 namespace gltf{
@@ -91,4 +92,8 @@ class Globals{
 
     // blur lab
 
+
+    //billboard lab
+    BillboardCollection* billboardCollection;
+    GraphicsPipeline* pipelineDrawBillboards;
 };
