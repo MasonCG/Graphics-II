@@ -43,16 +43,6 @@ void setup(Globals* globs)
         100.0f          //yon
     );
 
-    globs->suncamera = new Camera(
-        vec3(0, 1, 2),    //eye
-        vec3(0, 0, 0),    //coi
-        vec3(0, 1, 0),    //up
-        radians(35.0f), //field of view
-        1.0f,           //aspect ratio
-        0.1f,           //hither
-        100.0f          //yon
-    );
-
     globs->vertexManager = new VertexManager(
         globs->ctx,
         {
@@ -175,7 +165,10 @@ void setup(Globals* globs)
 
     // end skybox code
 
-    /*
+   // shadows code
+
+
+
     globs->pipelineNonFloor = new GraphicsPipeline(
         globs->ctx,
         "nonfloor pipe",
@@ -256,48 +249,7 @@ void setup(Globals* globs)
         PipelineOption{ .dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA }
     );
 
-    */
-
-    // Flare Lab
-    globs->flarePipeline = new GraphicsPipeline(
-        globs->ctx,
-        "flare pipe",
-        globs->pipelineLayout,
-        PipelineOption{ .shader = ShaderManager::load("shaders/flare.vert") },
-        PipelineOption{ .shader = ShaderManager::load("shaders/flare.frag") },
-        PipelineOption{ .vertexInputState = globs->vertexManager->inputState },
-        PipelineOption{ .blendEnable = 1 },
-        PipelineOption{ .srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA },
-        PipelineOption{ .dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA }
-    );
-
-    globs->blackSunPipe = new GraphicsPipeline(
-        globs->ctx,
-        "sun pipe",
-        globs->pipelineLayout,
-        PipelineOption{ .shader = ShaderManager::load("shaders/blacksun.vert") },
-        PipelineOption{ .shader = ShaderManager::load("shaders/blacksun.frag") },
-        PipelineOption{ .vertexInputState = globs->vertexManager->inputState }
-    );
-
-    globs->whiteSunPipe = new GraphicsPipeline(
-        globs->ctx,
-        "sun pipe",
-        globs->pipelineLayout,
-        PipelineOption{ .shader = ShaderManager::load("shaders/whitesun.vert") },
-        PipelineOption{ .shader = ShaderManager::load("shaders/whitesun.frag") },
-        PipelineOption{ .vertexInputState = globs->vertexManager->inputState }
-    );
-
-    globs->sunfbo = new Framebuffer(
-        globs->ctx,
-        16, 16,                    //width, height
-        1,                          //num layers
-        VK_FORMAT_R8G8B8A8_UNORM,   //format
-        "fbo"                       //debugging name
-    );
-
-
+    // end shadows lab
 
     // framebuffering and FBO lab & blur lab
     
@@ -339,12 +291,6 @@ void setup(Globals* globs)
 
     globs->room = gltf::load("assets/kitchen.glb",globs->vertexManager);
     auto lights = gltf::getLights("assets/kitchen.glb");
-    // Flare Lab
-
-    globs->glowTexture = ImageManager::load("assets/sunGlow.png");
-    globs->flares[0] = ImageManager::load("assets/flare1.png");
-    globs->flares[1] = ImageManager::load("assets/flare2.png");
-    globs->flares[2] = ImageManager::load("assets/flare3.png");
 
     // framebuffer and FBO Lab
     globs->blitSquare = new BlitSquare(globs->vertexManager);
@@ -357,17 +303,6 @@ void setup(Globals* globs)
         VK_FORMAT_R8G8B8A8_UNORM,   //format
         "fbo"                       //debugging name
     );
-
-
-    /*
-    lights[0].position;
-    mat4 T = translation(-lights[0].position);
-    mat4 M = mat4(-0.3135, 0, 0, 0,
-        0, -0.3135, 0, 1,
-        0, 0, -0.3135, 0,
-        0, 0, -0.3135, 0);
-    */
-
 
     for( Light L : lights ){
 

@@ -140,6 +140,13 @@ vec3 doBumpMapping(vec3 b, vec3 N)
 
 
 void main(){
+
+	if( doingShadow != 0 ){
+        color = vec4(0,0,0,1);
+        return;
+    }
+
+
 	vec3 b = texture(sampler2DArray(normalTexture, mipSampler),
                     vec3(texcoord2,0.0) ).xyz;
 

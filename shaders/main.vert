@@ -24,6 +24,12 @@ void main(){
     vec4 p = vec4(position,1.0);
     p = p * worldMatrix;
     v_worldpos = p.xyz;
+	
+	// for shadows
+	if (doingShadow != 0){
+		p = p * flattenMatrix;
+	}
+	
     p = p * viewProjMatrix;
     gl_Position = p;
     v_texcoord=texcoord;
