@@ -150,8 +150,9 @@ void setup(Globals* globs)
         PipelineOption{ .shader = ShaderManager::load("shaders/billboard.vert") },
         PipelineOption{ .shader = ShaderManager::load("shaders/billboard.frag") },
         PipelineOption{ .blendEnable = 1 },
+        PipelineOption{ .depthWriteEnable = VK_FALSE },
         PipelineOption{ .srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA },
-        PipelineOption{ .dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA },
+        PipelineOption{ .dstColorBlendFactor = VK_BLEND_FACTOR_ONE },
         PipelineOption{ .vertexInputState = globs->vertexManager->inputState }
     );
     
