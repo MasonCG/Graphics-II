@@ -7,7 +7,7 @@
 #include "vkhelpers.h"
 #include "math2801.h"
 
-class BlitSquare;
+class BatchSquare;
 class Buffer;
 class Image;
 class DescriptorSet;
@@ -31,7 +31,7 @@ public:
 
     unsigned numBillboards;
     Image* img;
-    BlitSquare* blitSquare;
+    BatchSquare* batchSquare;
     VkBufferView positionView;
     Buffer* positions;
     VulkanContext* ctx;

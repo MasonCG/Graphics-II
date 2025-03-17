@@ -9,6 +9,12 @@
 #include "BlitSquare.h"
 #include "BillboardCollection.h"
 
+float randrange(float min, float max) {
+
+    float t = rand() / float(max);
+    return (min + t * (max - min));
+}
+
 void setup(Globals* globs)
 {
     ShaderManager::initialize(globs->ctx);
@@ -156,21 +162,23 @@ void setup(Globals* globs)
         PipelineOption{ .vertexInputState = globs->vertexManager->inputState }
     );
     
+    std::vector<math2801::vec4> billboardPos;
+    
+
+    float l = -100.0f;
+    float h = 100.0f;
+
+    for (int i = 0; i < BILLBOARD_BATCH_SIZE; i++) {
+        float x = randrange(l, h);
+        float y = randrange(l, h);
+        float z = randrange(l, h);
+        billboardPos.push_back(math2801::vec4{x, y, z, 0});
+    }
+
     globs->billboardCollection = new BillboardCollection(
         globs->ctx,
         globs->vertexManager,
-        {
-            {-1.0f, 0.0f, 0.0f, 1.0f},
-            {-0.5f, 0.0f, 0.0f, 1.0f},
-            {0.5f, 0.0f, 0.0f, 1.0f},
-            {-1.0f, 0.5f, 0.0f, 1.0f},
-            {-0.5f, 0.5f, 0.0f, 1.0f},
-            {0.5f, 0.5f, 0.0f, 1.0f},
-            {-1.0f, 1.0f, 0.0f, 1.0f},
-            {-0.5f, 1.0f, 0.0f, 1.0f},
-            {0.5f, 1.0f, 0.0f, 1.0f},
-            {1.0f, 1.0f, 0.0f, 1.0f}
-        },
+        billboardPos,
         ImageManager::load("assets/nova.png")
     );
 
@@ -373,8 +381,8 @@ void setup(Globals* globs)
         "main uniforms"
     );
 
-    globs->room = gltf::load("assets/kitchen.glb",globs->vertexManager);
-    auto lights = gltf::getLights("assets/kitchen.glb");
+    globs->room = gltf::load("assets/room6.glb",globs->vertexManager);
+    auto lights = gltf::getLights("assets/room6.glb");
     // Flare Lab
 
     globs->glowTexture = ImageManager::load("assets/sunGlow.png");

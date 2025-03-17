@@ -1,6 +1,6 @@
 //BlitSquare.cpp
 
-#include "BlitSquare.h"
+#include "BatchSquare.h"
 #include "Framework.h"
 #include <vector>
 #include "shaders/importantconstants.h"
@@ -9,35 +9,72 @@ using namespace math2801;
 
 
 
-BlitSquare::BlitSquare(VertexManager* vertexManager) {
+BatchSquare::BatchSquare(VertexManager* vertexManager) {
+
+    std::vector<vec3> pos;
+    std::vector<vec2> tex;
+    std::vector<vec3> nor;
+    std::vector<vec4> tan;
+    std::vector<vec2> tex2;
+
+    std::vector<uint32_t> ind;
+
+
+    for (int i = 0; i < BILLBOARD_BATCH_SIZE; i++) {
+
+        pos.push_back(vec3{ i, -1, 0 });
+        pos.push_back(vec3{ i, -1, 0 });
+        pos.push_back(vec3{ i, 1, 0 });
+        pos.push_back(vec3{ i, 1, 0 });
+        tex.push_back(vec2{ 0, 0 });
+        tex.push_back(vec2{ 1, 0 });
+        tex.push_back(vec2{ 1, 1 });
+        tex.push_back(vec2{ 0, 1});
+        nor.push_back(vec3{ 0, 0, 1 });
+        nor.push_back(vec3{ 1, -1, 1 });
+        nor.push_back(vec3{ 0, 0, 1 });
+        nor.push_back(vec3{ 0, 0, 1 });
+        tan.push_back(vec4{ 0, 0, 0, 0 });
+        tan.push_back(vec4{ 0,0,0,0});
+        tan.push_back(vec4{ 0,0,0,0 });
+        tan.push_back(vec4{ 0,0,0,0 });
+        tex2.push_back(vec2{ 0, 0 });
+        tex2.push_back(vec2{ 1, 0 });
+        tex2.push_back(vec2{ 1, 1 });
+        tex2.push_back(vec2{ 0, 1 });
+
+
+
+        ind.push_back(0 + i * 4);
+        ind.push_back(1 + i * 4);
+        ind.push_back(2 + i * 4);
+        ind.push_back(0 + i * 4);
+        ind.push_back(2 + i * 4);
+        ind.push_back(3 + i * 4);
+
+    }
+
+
+
     this->drawinfo = vertexManager->addIndexedData(
-        "positions",
-        std::vector<vec3>{vec3{-1, -1, 0}, vec3{ 1,-1,0 },
-        vec3{ 1,1,0 }, vec3{ -1,1,0 }},
+        "positions",pos,
 
-        "texcoords",
-        std::vector<vec2>{ {0, 0}, { 1,0 }, { 1,1 }, { 0,1 } },
+        "texcoords",tex,
 
-        "normals",
-        std::vector<vec3>{ {0, 0, 1}, { 0,0,1 }, { 0,0,1 },
-        { 0,0,1 } },
+        "normals",nor,
 
-        "tangents",
-        std::vector<vec4>{ {0, 0, 0, 0}, { 0,0,0,0 },
-        { 0,0,0,0 }, { 0,0,0,0 } },
+        "tangents",tan,
 
-        "texcoords2",
-        std::vector<vec2>{ {0, 0}, { 1,0 }, { 1,1 }, { 0,1 } },
+        "texcoords2",tex2,
 
-        "indices",
-        std::vector<std::uint32_t>{ 0, 1, 2, 0, 2, 3 }
+        "indices", ind
     );
 }
 
-void BlitSquare::draw(VulkanContext* ctx, VkCommandBuffer cmd,
+void BatchSquare::draw(VulkanContext* ctx, VkCommandBuffer cmd,
     DescriptorSet* descriptorSet, Image* img)
 {
-    ctx->beginCmdRegion(cmd, "BlitSquare");
+    ctx->beginCmdRegion(cmd, "BatchSquare");
 
     if (img != nullptr) {
         descriptorSet->setSlot(BASE_TEXTURE_SLOT, img->view());
@@ -59,4 +96,17 @@ void BlitSquare::draw(VulkanContext* ctx, VkCommandBuffer cmd,
     );
 
     ctx->endCmdRegion(cmd);
+}
+
+void BatchSquare::drawInstanced(VkCommandBuffer cmd,
+    unsigned numInstances)
+{
+    vkCmdDrawIndexed(
+        cmd,
+        6* BILLBOARD_BATCH_SIZE,              //index count
+        numInstances,              //instance count
+        this->drawinfo.indexOffset,
+        this->drawinfo.vertexOffset,
+        0               //first instance
+    );
 }

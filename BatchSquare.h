@@ -7,12 +7,12 @@
 class DescriptorSet;
 class Image;
 
-class BlitSquare {
+class BatchSquare {
 public:
     VertexManager::Info drawinfo;
-    BlitSquare(VertexManager* vertexManager);
+    BatchSquare(VertexManager* vertexManager);
     void draw(VulkanContext* ctx, VkCommandBuffer cmd, DescriptorSet* descriptorSet, Image* img);
-
-    BlitSquare(const BlitSquare&) = delete;
-    void operator=(const BlitSquare&) = delete;
+    void drawInstanced(VkCommandBuffer cmd, unsigned numInstances);
+    BatchSquare(const BatchSquare&) = delete;
+    void operator=(const BatchSquare&) = delete;
 }; 

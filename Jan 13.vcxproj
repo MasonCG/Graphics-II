@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BatchSquare.cpp" />
     <ClCompile Include="BillboardCollection.cpp" />
     <ClCompile Include="BlitSquare.cpp" />
     <ClCompile Include="BlurrableFramebuffer.cpp" />
@@ -181,6 +182,7 @@
     <ClCompile Include="vkhelpers.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BatchSquare.h" />
     <ClInclude Include="BillboardCollection.h" />
     <ClInclude Include="BlitSquare.h" />
     <ClInclude Include="BlurrableFramebuffer.h" />

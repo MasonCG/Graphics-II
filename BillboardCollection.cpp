@@ -3,7 +3,7 @@
 #include "BillboardCollection.h"
 #include "VertexManager.h"
 #include "Buffers.h"
-#include "BlitSquare.h"
+#include "BatchSquare.h"
 #include "Descriptors.h"
 #include "Samplers.h"
 #include "Images.h"
@@ -17,7 +17,17 @@ BillboardCollection::BillboardCollection(
     VertexManager* vertexManager,
     const std::vector<math2801::vec4>& positions_,
     Image* img_)
+
+
 {
+
+    if (positions_.size() % BILLBOARD_BATCH_SIZE) {
+        //fatal() is in consoleoutput.h
+        fatal("Bad position count:", positions_.size(),
+            "is not a multiple of", BILLBOARD_BATCH_SIZE);
+    }
+
+
     this->positions = new DeviceLocalBuffer(ctx_, positions_,
         VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT,
         "BillboardCollection positions"
@@ -30,7 +40,7 @@ BillboardCollection::BillboardCollection(
 
     this->img = img_;
     this->numBillboards = (unsigned)positions_.size();
-    this->blitSquare = new BlitSquare(vertexManager);
+    this->batchSquare = new BatchSquare(vertexManager);
     this->ctx = ctx_;
 
     CleanupManager::registerCleanupFunction(
@@ -53,7 +63,7 @@ void BillboardCollection::draw(VkCommandBuffer cmd,
     descriptorSet->setSlot(BILLBOARD_TEXTURE_SLOT, this->positionView);
     descriptorSet->bind(cmd);
     //we don't want blitSquare to set images, so we pass in null
-    this->blitSquare->drawInstanced(cmd, this->numBillboards);
+    this->batchSquare->drawInstanced(cmd, this->numBillboards);
 
     //for Renderdoc debugging
     ctx->endCmdRegion(cmd);

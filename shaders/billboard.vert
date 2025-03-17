@@ -6,6 +6,7 @@
 #include "pushconstants.txt"
 #include "uniforms.txt"
 
+layout(location=VS_INPUT_POSITION) in vec3 indexinfo;
 layout(location=VS_INPUT_TEXCOORD) in vec2 texcoord;
 layout(set=0,binding=BILLBOARD_TEXTURE_SLOT) uniform
                     textureBuffer billboardPositions;
@@ -15,8 +16,10 @@ layout(location=0) out vec2 v_texcoord;
 
 void main(){
 
+	int idx = int(indexinfo.x);
+
     //p holds center of billboard
-    vec4 p = texelFetch( billboardPositions, gl_InstanceIndex );
+    vec4 p = texelFetch( billboardPositions, gl_InstanceIndex*BILLBOARD_BATCH_SIZE + idx);
     p.w = 1.0;
 
     //put in world space
