@@ -229,7 +229,10 @@ void main(){
 	
     color = c;
 	
-	color.rgb += pow(1.0-roughness,4.0) * metalicity * reflectionColor;
+	if (doingReflections != 2){
+		color.rgb += pow(1.0-roughness,4.0) * metalicity * reflectionColor;
+	}
+
 	
 	if( doingReflections == 2 )
 		color.a *= 0.85;
