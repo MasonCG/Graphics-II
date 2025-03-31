@@ -39,10 +39,7 @@ void draw(Globals* globs)
     };
     vkBeginCommandBuffer(cmd,&beginInfo);
 
-    globs->descriptorSet->setSlot(
-        ENVMAP_TEXTURE_SLOT,
-        globs->interiorEnviormentMap->view()
-    );
+  
 
     globs->text->update(cmd);
 
@@ -77,6 +74,11 @@ void draw(Globals* globs)
         globs->pushConstants
     );
 
+
+    globs->descriptorSet->setSlot(
+        ENVMAP_TEXTURE_SLOT,
+        globs->interiorEnviormentMap->view()
+    );
 
     globs->pipeline->use(cmd);
 

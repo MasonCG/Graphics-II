@@ -178,6 +178,8 @@ void main(){
 	
 	// working on relflecting amd metalicity
 	
+	
+	
 	vec3 V = normalize(eyePosition - worldPosition);
 	
 	
@@ -189,7 +191,9 @@ void main(){
 	metalicity *= metallicFactor;
 	roughness *= roughnessFactor;
 	
+
 	vec3 reflectedView = reflect(-V,N);
+
 
    vec3 reflectionColor = texture(
     samplerCube(environmentMap, mipSampler),
@@ -211,9 +215,6 @@ void main(){
     }
 	
 	
-	
-	
-
     vec3 ec = texture(
         sampler2DArray(emitTexture,mipSampler), tc
     ).rgb;
@@ -227,7 +228,7 @@ void main(){
     c.rgb = clamp(c.rgb, vec3(0.0), vec3(1.0));
 	
     color = c;
-
+	
 	color.rgb += pow(1.0-roughness,4.0) * metalicity * reflectionColor;
 	
 	if( doingReflections == 2 )
