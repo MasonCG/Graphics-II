@@ -58,37 +58,23 @@ class Globals{
     PipelineLayout* pipelineLayout;
     DescriptorSetFactory* descriptorSetFactory;
     
+    //for planarReflections
+    mat4 reflectionMatrix;
+    GraphicsPipeline* floorPipeline1;
+    GraphicsPipeline* reflectedObjectsPipeline;
+    GraphicsPipeline* floorPipeline2;
+    vec4 reflectionPlane;
     //for skybox
     Pipeline* skyboxPipeline;
     Image* interiorEnviormentMap;
     Image* skyboxEnviormentMap;
     gltf::Mesh* skyboxCube;
 
-    // for shading
-    mat4 flattenMatrix;
-    GraphicsPipeline* pipelineNonFloor;
-    GraphicsPipeline* pipelineFloor;
-    GraphicsPipeline* pipelineShadow;
-    GraphicsPipeline* pipelineFloorShadow;
-
-    //for reflection
-
-
+ 
     // framebuffer FBO Lab
     BlurrableFramebuffer* offscreen;
     GraphicsPipeline* blitPipe;
     BlitSquare* blitSquare;
 
-
-    // Flare Lab
-    Image* glowTexture;
-    GraphicsPipeline* flarePipeline;
-    GraphicsPipeline* blackSunPipe;
-    GraphicsPipeline* whiteSunPipe;
-    Image* flares[3];
-    Framebuffer* sunfbo;
-    Camera* suncamera;
-
-    // blur lab
 
 };

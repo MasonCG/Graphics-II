@@ -140,6 +140,16 @@ vec3 doBumpMapping(vec3 b, vec3 N)
 
 
 void main(){
+
+
+	if( doingReflections == 1 ){
+        if( dot(vec4(worldPosition,1.0),reflectionPlane) < 0 ){
+            discard;
+            return;
+        }
+    }
+
+
 	vec3 b = texture(sampler2DArray(normalTexture, mipSampler),
                     vec3(texcoord2,0.0) ).xyz;
 
@@ -219,6 +229,9 @@ void main(){
     color = c;
 
 	color.rgb += pow(1.0-roughness,4.0) * metalicity * reflectionColor;
+	
+	if( doingReflections == 2 )
+		color.a *= 0.85;
 
 
 
