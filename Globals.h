@@ -89,6 +89,14 @@ class Globals{
     Framebuffer* sunfbo;
     Camera* suncamera;
 
-    // blur lab
+  
+    vec3 windowP0;
+    vec3 windowUvec;
+    vec3 windowVvec;
+    float windowp1p0;
+    float windowp3p0;
+    Image * windowImage;
+    vec4 windowPlane;
+    vec3 windowLightDirection;
 
 };

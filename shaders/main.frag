@@ -22,7 +22,7 @@ layout(set=0,binding=EMISSIVE_TEXTURE_SLOT) uniform texture2DArray emitTexture;
 layout(set=0,binding=NORMAL_TEXTURE_SLOT) uniform texture2DArray normalTexture;
 layout(set=0,binding=METALLICROUGHNESS_TEXTURE_SLOT) uniform texture2DArray metallicRoughnessTexture;
 layout(set=0,binding=ENVMAP_TEXTURE_SLOT) uniform textureCube environmentMap;
-
+layout(set=0,binding=PROJECTED_TEXTURE_SLOT) uniform texture2DArray windowTexture;
 
 
 layout(location=0) out vec4 color;
@@ -44,7 +44,13 @@ void computeLightContribution(int i, vec3 N, vec3 V, float roughness, float meta
     float cosSpotInnerAngle = cosSpotAngles[i].x;
     float cosSpotOuterAngle = cosSpotAngles[i].y;
 
-    vec3 L = normalize( lightPosition - worldPosition );
+
+	vec3 L;
+	if(positional != 0.0 )
+		L = normalize( lightPosition - worldPosition );
+	else
+		L = lightPosition;
+		
 
     vec3 R = reflect(-L,N);
 	vec3 H = L+V;
@@ -90,23 +96,26 @@ void computeLightContribution(int i, vec3 N, vec3 V, float roughness, float meta
 	vec3 sp = cos_NL * F * Vis * Dis; 
 	diff = cos_NL * ( vec3(1.0)-F) * d/PI;
 	
+	if( positional != 0.0 ){        //new
 
-    float D = distance( lightPosition, worldPosition );
-    float A = 1.0/( D*(attenuation[2] * D   +
-                       attenuation[1]     ) +
-                       attenuation[0]     );
-    A = clamp(A, 0.0, 1.0);
+		float D = distance( lightPosition, worldPosition );
+		float A = 1.0/( D*(attenuation[2] * D   +
+						   attenuation[1]     ) +
+						   attenuation[0]     );
+		A = clamp(A, 0.0, 1.0);
 
-    diff *= A;
-    sp *= A;
+		diff *= A;
+		sp *= A;
 
-    float cosineTheta = dot(-L,spotDir);
-    float spotAttenuation = smoothstep(
-                    cosSpotOuterAngle,
-                    cosSpotInnerAngle,
-                    cosineTheta);
-    diff *= spotAttenuation;
-    sp *= spotAttenuation;
+		float cosineTheta = dot(-L,spotDir);
+		float spotAttenuation = smoothstep(
+						cosSpotOuterAngle,
+						cosSpotInnerAngle,
+						cosineTheta);
+		diff *= spotAttenuation;
+		sp *= spotAttenuation;
+	
+	}
 
     diff = diff * lightColor * intensity;
     spec = sp * lightColor * intensity;
@@ -138,6 +147,31 @@ vec3 doBumpMapping(vec3 b, vec3 N)
     return N;       //bump mapped normal
 }
 
+vec3 getProjColor(vec3 worldpos, vec3 N){
+	vec3 windowNormal = windowPlane.xyz;
+
+	float tau = -(dot(windowNormal, worldpos) + windowPlane.w) / dot(windowNormal,N);
+	vec3 p_ = worldpos + tau *N;
+	float s = dot( windowUvec, (p_-windowP0))/windowp1p0;
+	float t = dot(windowVvec, (p_-windowP0))/windowp3p0;
+	
+
+	vec4 projColor = texture(
+    sampler2DArray(windowTexture, mipSampler),
+    vec3(s,t,0.0)
+	);
+	
+	float projPct = clamp(dot(N,windowLightDirection), 0.0, 1.0);
+	projPct *= 0.75;        //arbitrary: Scale color down a bit
+	projColor *= projPct;
+	
+	if (s < 0 || s > 1 || t < 0 || t > 1){
+		projColor = vec4(0);
+	}
+	
+	return projColor.rgb;
+	
+}
 
 void main(){
 	vec3 b = texture(sampler2DArray(normalTexture, mipSampler),
@@ -219,8 +253,24 @@ void main(){
     color = c;
 
 	color.rgb += pow(1.0-roughness,4.0) * metalicity * reflectionColor;
-
-
-
+	
+	
+	
+	float stepSize = 0.01;
+	vec3 p = worldPosition;
+	float remaining = distance(eyePosition,p);
+	vec3 delta = stepSize * V;
+	vec3 total = vec3(0.0);
+	
+	int numSteps = int(remaining / stepSize);
+	for(int i=0;i<numSteps;++i){
+		//set "normal" to the light direction
+		//so we get full light contribution here
+		total += getProjColor(p, windowLightDirection);
+		p += delta;
+	}
+	total *= 1.0/numSteps;
+	
+	color.rgb += total;
 
 }

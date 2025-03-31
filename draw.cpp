@@ -87,13 +87,20 @@ void draw(Globals* globs)
     globs->uniforms->set( "spotDirection", globs->spotDirection );
     globs->uniforms->set("flattenMatrix", globs->flattenMatrix);
 
+    globs->uniforms->set("windowP0", globs->windowP0);
+    globs->uniforms->set("windowUvec", globs->windowUvec);
+    globs->uniforms->set("windowVvec", globs->windowVvec);
+    globs->uniforms->set("windowp1p0", globs->windowp1p0);
+    globs->uniforms->set("windowp3p0", globs->windowp3p0);
+    globs->uniforms->set("windowPlane", globs->windowPlane);
+    globs->uniforms->set("windowLightDirection", globs->windowLightDirection);
+
+    globs->descriptorSet->setSlot(PROJECTED_TEXTURE_SLOT, globs->windowImage->view());
+
     globs->uniforms->bind(cmd,globs->descriptorSet);
 
     globs->pipeline->use(cmd);
 
-  
-
-    
     for (auto& m : globs->room) {
         m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
     }

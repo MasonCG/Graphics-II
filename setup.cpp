@@ -114,7 +114,9 @@ void setup(Globals* globs)
             DescriptorSetEntry(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
                                 ENVMAP_TEXTURE_SLOT),
              DescriptorSetEntry(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
-                                SUNFBO_TEXTURE_SLOT)
+                                SUNFBO_TEXTURE_SLOT),
+             DescriptorSetEntry(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
+                                PROJECTED_TEXTURE_SLOT)
         }
     );
 
@@ -175,88 +177,7 @@ void setup(Globals* globs)
 
     // end skybox code
 
-    /*
-    globs->pipelineNonFloor = new GraphicsPipeline(
-        globs->ctx,
-        "nonfloor pipe",
-        globs->pipelineLayout,
-        PipelineOption{ .shader = ShaderManager::load("shaders/main.vert") },
-        PipelineOption{ .shader = ShaderManager::load("shaders/main.frag") },
-        PipelineOption{ .vertexInputState = globs->vertexManager->inputState }
-    );
 
-    globs->pipelineFloor = new GraphicsPipeline(
-        globs->ctx,
-        "floor pipe",
-        globs->pipelineLayout,
-        PipelineOption{ .shader = ShaderManager::load("shaders/main.vert") },
-        PipelineOption{ .shader = ShaderManager::load("shaders/main.frag") },
-        PipelineOption{ .vertexInputState = globs->vertexManager->inputState },
-        PipelineOption{ .stencilTestEnable = 1 },
-        PipelineOption{
-            .stencilFrontAndBack = VkStencilOpState{
-                .failOp = VK_STENCIL_OP_KEEP,
-                .passOp = VK_STENCIL_OP_REPLACE,
-                .depthFailOp = VK_STENCIL_OP_KEEP,
-                .compareOp = VK_COMPARE_OP_ALWAYS,
-                .compareMask = 0xff,
-                .writeMask = 0xff,
-                .reference = 1
-            }
-        }
-    );
-
-    globs->pipelineShadow = new GraphicsPipeline(
-        globs->ctx,
-        "shadow pipe",
-        globs->pipelineLayout,
-        PipelineOption{ .shader = ShaderManager::load("shaders/shadow.vert") },
-        PipelineOption{ .shader = ShaderManager::load("shaders/shadow.frag") },
-        PipelineOption{ .vertexInputState = globs->vertexManager->inputState },
-        PipelineOption{ .depthTestEnable = 0 },
-        PipelineOption{ .stencilTestEnable = 1 },
-        PipelineOption{
-            .stencilFrontAndBack = VkStencilOpState{
-                .failOp = VK_STENCIL_OP_KEEP,
-                .passOp = VK_STENCIL_OP_INCREMENT_AND_CLAMP,
-                .depthFailOp = VK_STENCIL_OP_KEEP,
-                .compareOp = VK_COMPARE_OP_EQUAL,
-                .compareMask = 0xff,
-                .writeMask = 0xff,
-                .reference = 1
-            }
-        },
-        PipelineOption{ .blendEnable = 1 },
-        PipelineOption{ .srcColorBlendFactor = VK_BLEND_FACTOR_ZERO },
-        PipelineOption{ .dstColorBlendFactor = VK_BLEND_FACTOR_ONE }
-    );
-
-    globs->pipelineFloorShadow = new GraphicsPipeline(
-        globs->ctx,
-        "floor shadow pipe",
-        globs->pipelineLayout,
-        PipelineOption{ .shader = ShaderManager::load("shaders/main.vert") },
-        PipelineOption{ .shader = ShaderManager::load("shaders/main.frag") },
-        PipelineOption{ .vertexInputState = globs->vertexManager->inputState },
-        PipelineOption{ .depthTestEnable = 0 },
-        PipelineOption{ .stencilTestEnable = 1 },
-        PipelineOption{
-            .stencilFrontAndBack = VkStencilOpState{
-                .failOp = VK_STENCIL_OP_KEEP,
-                .passOp = VK_STENCIL_OP_KEEP,
-                .depthFailOp = VK_STENCIL_OP_KEEP,
-                .compareOp = VK_COMPARE_OP_EQUAL,
-                .compareMask = 0xff,
-                .writeMask = 0xff,
-                .reference = 2
-            }
-        },
-        PipelineOption{ .blendEnable = 1 },
-        PipelineOption{ .srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA },
-        PipelineOption{ .dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA }
-    );
-
-    */
 
     // Flare Lab
     globs->flarePipeline = new GraphicsPipeline(
@@ -337,8 +258,7 @@ void setup(Globals* globs)
         "main uniforms"
     );
 
-    globs->room = gltf::load("assets/kitchen.glb",globs->vertexManager);
-    auto lights = gltf::getLights("assets/kitchen.glb");
+    globs->room = gltf::load("assets/sglass.glb",globs->vertexManager);
     // Flare Lab
 
     globs->glowTexture = ImageManager::load("assets/sunGlow.png");
@@ -359,24 +279,24 @@ void setup(Globals* globs)
     );
 
 
-    /*
-    lights[0].position;
-    mat4 T = translation(-lights[0].position);
-    mat4 M = mat4(-0.3135, 0, 0, 0,
-        0, -0.3135, 0, 1,
-        0, 0, -0.3135, 0,
-        0, 0, -0.3135, 0);
-    */
+    
+
+    auto lights = gltf::getLights("assets/sglass.glb");
+    for (Light L : lights) {
+        if (L.positional) {
+            //xyz=position if positional; direction if directional. w=flag
+            globs->lightPositionAndDirectionalFlag.push_back(
+                vec4(L.position.x, L.position.y, L.position.z, 1.0f)
+            );
+        }
+        else {
+            //xyz=position if positional; direction if directional. w=flag
+            globs->lightPositionAndDirectionalFlag.push_back(
+                vec4(-L.direction.x, -L.direction.y, -L.direction.z, 0.0f)
+            );
+        }
 
 
-    for( Light L : lights ){
-
-        //xyz=position if positional; direction if directional. w=flag
-        globs->lightPositionAndDirectionalFlag.push_back(
-            vec4( L.position.x, L.position.y, L.position.z,
-                  (L.positional ? 1.0f : 0.0f )
-            )
-        );
 
         //xyz=color, w=intensity
         globs->lightColorAndIntensity.push_back(
@@ -398,6 +318,22 @@ void setup(Globals* globs)
         "assets/writing36.png",
         "assets/writing36.txt"
     );
+
+    //PROJECTIVE TEXTURES
+    vec3 windowCenter(0, 3.0593f, 2.2595f);
+    float radius = 0.8973f;
+    vec3 left(1, 0, 0); //not -1
+    vec3 down(0, -1, 0);
+    globs->windowP0 = windowCenter + (left + down)*radius; //TODO
+    globs->windowUvec = -left;
+    globs->windowVvec = -down;
+    globs->windowp1p0 = 2*radius;
+    globs->windowp3p0 = 2*radius;
+    globs->windowImage = ImageManager::load("assets/window5.png");
+    vec3 planeNormal(0, 0, -1);
+    float D = -dot(planeNormal, globs->windowP0);
+    globs->windowPlane = vec4(planeNormal, D);
+    globs->windowLightDirection = -lights[0].direction;
 
     globs->vertexManager->pushToGPU();
     ImageManager::pushToGPU();
