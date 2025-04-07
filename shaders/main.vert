@@ -24,14 +24,10 @@ void main(){
     vec4 p = vec4(position,1.0);
     p = p * worldMatrix;
     v_worldpos = p.xyz;
-    p = p * viewProjMatrix;
-    gl_Position = p;
-    v_texcoord=texcoord;
-    //vec4 N = vec4(normal,0.0);
-    //N = N * worldMatrix;
-    v_normal = normal; //v_normal = N.xyz;
-	
-	v_tangent = tangent;
-	v_texcoord2 = texcoord2;
-	
+    //REMOVED: p = p * viewProjMatrix;
+    //REMOVED: gl_Position = p;
+    v_texcoord = texcoord;
+    v_texcoord2 = texcoord2;
+    v_normal = normal;
+    v_tangent=tangent;
 }

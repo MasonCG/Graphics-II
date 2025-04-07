@@ -95,6 +95,15 @@ void update(Globals* globs, float elapsed)
     if(globs->pressedKeys.contains(SDLK_f))
         globs->camera->strafeUp(-elapsed);
 
+    if (globs->pressedKeys.contains(SDLK_1)) {
+        globs->tesslevel += 1.0f * elapsed;
+        std::cout << globs->tesslevel << "\n";
+    }
+    if (globs->pressedKeys.contains(SDLK_2)) {
+        globs->tesslevel -= 1.0f * elapsed;
+        std::cout << globs->tesslevel << "\n";
+    }
+
 
     globs->text->clear();
     std::string tmp = std::format("Eye: {:.02f} {:.02f} {:.02f}",globs->camera->eye.x, globs->camera->eye.y, globs->camera->eye.z);

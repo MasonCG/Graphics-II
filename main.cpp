@@ -20,9 +20,12 @@ int main(int , char**)
     SDL_Window* win = SDL_CreateWindow("ETGG", 10,40,
         globs->width, globs->height, SDL_WINDOW_VULKAN );
 
+
     VkPhysicalDeviceFeatures featuresToEnable{};
-    featuresToEnable.fillModeNonSolid=VK_TRUE;
-    auto ctx = new VulkanContext(win,featuresToEnable);
+    featuresToEnable.samplerAnisotropy = VK_TRUE;     //might have this
+    featuresToEnable.fillModeNonSolid = VK_TRUE;      //NEW
+    featuresToEnable.tessellationShader = VK_TRUE;    //NEW
+    auto ctx = new VulkanContext(win, featuresToEnable);
 
     globs->ctx = ctx;
     CommandBuffer::initialize(ctx);

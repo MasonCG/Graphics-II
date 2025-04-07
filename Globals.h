@@ -71,9 +71,6 @@ class Globals{
     GraphicsPipeline* pipelineShadow;
     GraphicsPipeline* pipelineFloorShadow;
 
-    //for reflection
-
-
     // framebuffer FBO Lab
     BlurrableFramebuffer* offscreen;
     GraphicsPipeline* blitPipe;
@@ -89,6 +86,8 @@ class Globals{
     Framebuffer* sunfbo;
     Camera* suncamera;
 
-    // blur lab
+    // tessellation
+    float tesslevel = 1.0f;
+
 
 };
