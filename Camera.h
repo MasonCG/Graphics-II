@@ -24,7 +24,7 @@ class Camera{
     void updateProjMatrix();
     void lookAt(vec3 eye, vec3 coi, vec3 up);
     void updateViewMatrix();
-    void setUniforms(Uniforms* uniforms);
+    void setUniforms(Uniforms* uniforms, std::string prefix = "");
     void strafe(float deltaRight, float deltaUp, float deltaLook);
     void turn(float angle);
     void roll(float angle);

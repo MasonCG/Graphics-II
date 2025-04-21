@@ -22,6 +22,7 @@ layout(set=0,binding=EMISSIVE_TEXTURE_SLOT) uniform texture2DArray emitTexture;
 layout(set=0,binding=NORMAL_TEXTURE_SLOT) uniform texture2DArray normalTexture;
 layout(set=0,binding=METALLICROUGHNESS_TEXTURE_SLOT) uniform texture2DArray metallicRoughnessTexture;
 layout(set=0,binding=ENVMAP_TEXTURE_SLOT) uniform textureCube environmentMap;
+layout(set=0,binding=SHADOWBUFFER_SLOT) uniform texture2DArray shadowBuffer;
 
 
 
@@ -138,6 +139,42 @@ vec3 doBumpMapping(vec3 b, vec3 N)
     return N;       //bump mapped normal
 }
 
+// for shadow 
+
+#define BIAS 0.1
+
+bool pointIsInShadow( vec3 p, vec3 lightPos,
+                      mat4 viewProjMatrix, vec3 hitherYon)
+{
+   float distanceFromLight = distance(p, lightPos);
+	vec4 pp = vec4(p,1.0) * viewProjMatrix;
+	pp.xy /= pp.w;
+	
+		//if we're outside visible area, we're definitely in shadow
+	if( any( lessThan(   pp.xy,vec2(-1.0) ) ) ||
+		any( greaterThan(pp.xy,vec2( 1.0) ) ) ){
+			return true;
+	}
+
+	//pp is in -1...1 range. Remap to 0...1 range
+	pp.xy += vec2(1.0);
+	pp.xy *= 0.5;
+	
+	float shadowBufferDistance = texture(
+    sampler2DArray(shadowBuffer,nearestSampler),
+          vec3(pp.xy,0)
+	).r;
+	
+	//remap from 0...1 to hither...yon
+	shadowBufferDistance = mix(hitherYon[0],hitherYon[1],
+							shadowBufferDistance);
+	
+	if( shadowBufferDistance < BIAS + distanceFromLight )
+		return true;    //in shadow
+	else
+		return false;   //light can see p
+}
+
 
 void main(){
 	vec3 b = texture(sampler2DArray(normalTexture, mipSampler),
@@ -162,9 +199,6 @@ void main(){
 
     vec3 totaldp = vec3(0.0);
     vec3 totalsp = vec3(0.0);
-	
-	
-	
 	
 	// working on relflecting amd metalicity
 	
@@ -193,6 +227,13 @@ void main(){
 
 
     for(int i=0;i<MAX_LIGHTS;++i){
+	
+		if( pointIsInShadow( worldPosition, light_eyePosition,
+			light_viewProjMatrix, light_hitherYon) )
+			{
+				continue;
+			}
+				
         vec3 dp, sp;
         computeLightContribution(i,N, V, roughness, metalicity, d, F0, one_minus_F0, dp,sp);
 

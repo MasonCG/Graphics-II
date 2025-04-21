@@ -71,7 +71,11 @@ class Globals{
     GraphicsPipeline* pipelineShadow;
     GraphicsPipeline* pipelineFloorShadow;
 
-    //for reflection
+    // for shadow
+    Framebuffer* shadowBuffer;
+    Camera* lightCamera;
+    GraphicsPipeline* shadowPipeline;
+
 
 
     // framebuffer FBO Lab

@@ -1,6 +1,6 @@
 #include "importantconstants.h"
 
-#define MAX_LIGHTS 24
+#define MAX_LIGHTS 1
 
 
 layout(set=0,binding=UNIFORM_SLOT,std140,row_major) uniform UBO{
@@ -9,6 +9,15 @@ layout(set=0,binding=UNIFORM_SLOT,std140,row_major) uniform UBO{
     mat4 viewProjMatrix;
     vec3 attenuation;
     vec3 eyePosition;
+	mat4 light_viewMatrix;
+
+	mat4 light_projMatrix;
+	mat4 light_viewProjMatrix;
+	vec3 light_eyePosition;
+	vec3 light_hitherYon; //hither, yon, yon-hither
+	vec3 light_look;
+	vec3 hitherYon;
+	vec3 look;
 
     vec4 lightPositionAndDirectionalFlag[MAX_LIGHTS];
     vec4 lightColorAndIntensity[MAX_LIGHTS];
