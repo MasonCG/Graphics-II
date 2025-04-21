@@ -167,6 +167,11 @@ void main(){
     float mappedY = 0.5 * (N.y+1.0);
     vec3 ambient = c.rgb * mix( AMBIENT_BELOW, AMBIENT_ABOVE, mappedY );
 
+	if( doingShadow != 0 ){
+        color = vec4(ambient, 1);
+        return;
+    }
+
     vec3 totaldp = vec3(0.0);
     vec3 totalsp = vec3(0.0);
 	
