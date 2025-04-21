@@ -311,7 +311,7 @@ void setup(Globals* globs)
     mat4 Ti = translation(lights[0].position);
     vec4 N(0, 1, 0, 0);
     vec4 P(10, -0.3135, 20, 0);
-    vec4 Pp = P * Ti;
+    vec4 Pp = P * T;
     float D = -((N.x * Pp.x) + (N.y * Pp.y) + (N.z * Pp.z));
     mat4 M = mat4(
         -D, 0, 0, N.x,
