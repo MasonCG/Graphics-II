@@ -142,7 +142,7 @@ vec3 doBumpMapping(vec3 b, vec3 N)
 void main(){
 
 	if( doingShadow != 0 ){
-        color = vec4(0,0,0,1);
+        color = vec4(0, 0, 0, 0.6);
         return;
     }
 

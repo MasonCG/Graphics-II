@@ -167,7 +167,6 @@ void setup(Globals* globs)
 
    // shadows code
 
-    //globs->flattenMatrix
 
 
 
@@ -305,6 +304,23 @@ void setup(Globals* globs)
         VK_FORMAT_R8G8B8A8_UNORM,   //format
         "fbo"                       //debugging name
     );
+
+
+    lights[0].position;
+    mat4 T = translation(-lights[0].position);
+    mat4 Ti = translation(lights[0].position);
+    vec4 N(0, 1, 0, 0);
+    vec4 P(10, -0.3135, 20, 0);
+    vec4 Pp = P * Ti;
+    float D = -((N.x * Pp.x) + (N.y * Pp.y) + (N.z * Pp.z));
+    mat4 M = mat4(
+        -D, 0, 0, N.x,
+        0, -D, 0, N.y,
+        0, 0, -D, N.z,
+        0, 0, 0, 0);
+
+    globs->flattenMatrix = -(M * T * Ti);
+    
 
     for( Light L : lights ){
 

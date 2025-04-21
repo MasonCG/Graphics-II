@@ -25,11 +25,6 @@ void main(){
     p = p * worldMatrix;
     v_worldpos = p.xyz;
 	
-	// for shadows
-	if (doingShadow != 0){
-		p = p * flattenMatrix;
-	}
-	
     p = p * viewProjMatrix;
     gl_Position = p;
     v_texcoord=texcoord;

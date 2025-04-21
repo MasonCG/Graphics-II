@@ -63,16 +63,35 @@ void draw(Globals* globs)
 
     globs->uniforms->bind(cmd,globs->descriptorSet);
 
-    globs->pipeline->use(cmd);
-    
+
+    globs->pipelineNonFloor->use(cmd);
     globs->pushConstants->set(cmd, "doingShadow", 0);
     for (auto& m : globs->room) {
-        m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
+        if (m->name != "floor" ){
+            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
+        }
     }
 
+    globs->pipelineFloor->use(cmd);
+    for (auto& m : globs->room) {
+        if (m->name == "floor") {
+            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
+        }
+    }
+
+    globs->pipelineShadow->use(cmd);
+    for (auto& m : globs->room) {
+        if (m->name != "floor" && m->name != "room") {
+            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
+        }
+    }
+
+    globs->pipelineFloorShadow->use(cmd);
     globs->pushConstants->set(cmd, "doingShadow", 1);
     for (auto& m : globs->room) {
-        m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
+        if (m->name == "floor") {
+            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
+        }
     }
 
 
@@ -112,53 +131,6 @@ void draw(Globals* globs)
         globs->offscreen->currentImage()
     );
 
-
-    /*
-    globs->pushConstants->set(cmd, "doingShadow", 0);
-    for (gltf::Mesh* m : globs->room) {
-        m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
-    }
-
-    globs->pushConstants->set(cmd, "doingShadow", 1);
-    for (gltf::Mesh* m : globs->room) {
-        if (m->name != "floor" && m->name != "room") {
-            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
-        }
-    }
-    
-    globs->pipelineNonFloor->use(cmd);
-    globs->pushConstants->set(cmd, "doingShadow", 0);
-    for (auto& m : globs->room) {
-        if (m->name != "floor") {
-            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
-        }
-    }
-
-    globs->pipelineFloor->use(cmd);
-    for (auto& m : globs->room) {
-        if (m->name == "floor") {
-            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
-        }
-    }
-
-    globs->pipelineShadow->use(cmd);
-    globs->pushConstants->set(cmd, "doingShadow", 1);
-
-    for (auto& m : globs->room) {
-        if (m->name != "floor" && m->name != "room") {
-            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
-        }
-    }
-
-    globs->pipelineFloorShadow->use(cmd);
-    globs->pushConstants->set(cmd, "doingShadow", 1);
-    for (auto& m : globs->room) {
-        if (m->name == "floor") {
-            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
-        }
-    }
-
-    */
 
     globs->framebuffer->endRenderPass(cmd);
     vkEndCommandBuffer(cmd);
