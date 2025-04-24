@@ -312,14 +312,14 @@ void setup(Globals* globs)
     vec4 N(0, 1, 0, 0);
     vec4 P(10, -0.3135, 20, 0);
     vec4 Pp = P * T;
-    float D = -((N.x * Pp.x) + (N.y * Pp.y) + (N.z * Pp.z));
+    float D = -( -0.3135 - lights[0].position.y);
     mat4 M = mat4(
         -D, 0, 0, N.x,
         0, -D, 0, N.y,
         0, 0, -D, N.z,
         0, 0, 0, 0);
 
-    globs->flattenMatrix = -(M * T * Ti);
+    globs->flattenMatrix = -(T * M * Ti);
     
 
     for( Light L : lights ){
