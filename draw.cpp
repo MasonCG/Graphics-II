@@ -55,14 +55,24 @@ void draw(Globals* globs)
     globs->uniforms->set("cosSpotAngles", globs->cosSpotAngles);
     globs->uniforms->set("spotDirection", globs->spotDirection);
     
+    vec3 lightPos = globs->lightPositionAndDirectionalFlag[0].xyz();
+
+    vec3 sunup(0, 1, 0);
+    vec3 sunlook = lightPos - globs->camera->eye;
+    if (dot(sunlook, sunup) < 0.1)
+        sunup = vec3(0, 0, 1);
+    globs->suncamera->lookAt(globs->camera->eye, lightPos, sunup);
+    globs->suncamera->setUniforms(globs->uniforms);
     globs->uniforms->bind(cmd, globs->descriptorSet);
 
 
     globs->blackSunPipe->use(cmd);
-    for (auto& m : globs->room) {
+    for (auto& m : globs->room) {    
         m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
     }
+
     globs->whiteSunPipe->use(cmd);
+
     globs->blitSquare->draw(globs->ctx, cmd, globs->descriptorSet, nullptr);
 
 
@@ -92,6 +102,7 @@ void draw(Globals* globs)
     globs->pipeline->use(cmd);
 
   
+   
 
     
     for (auto& m : globs->room) {
@@ -134,63 +145,8 @@ void draw(Globals* globs)
     );
 
 
-    /*
-    globs->pushConstants->set(cmd, "doingShadow", 0);
-    for (gltf::Mesh* m : globs->room) {
-        m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
-    }
-
-    globs->pushConstants->set(cmd, "doingShadow", 1);
-    for (gltf::Mesh* m : globs->room) {
-        if (m->name != "floor" && m->name != "room") {
-            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
-        }
-    }
-    
-    globs->pipelineNonFloor->use(cmd);
-    globs->pushConstants->set(cmd, "doingShadow", 0);
-    for (auto& m : globs->room) {
-        if (m->name != "floor") {
-            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
-        }
-    }
-
-    globs->pipelineFloor->use(cmd);
-    for (auto& m : globs->room) {
-        if (m->name == "floor") {
-            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
-        }
-    }
-
-    globs->pipelineShadow->use(cmd);
-    globs->pushConstants->set(cmd, "doingShadow", 1);
-
-    for (auto& m : globs->room) {
-        if (m->name != "floor" && m->name != "room") {
-            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
-        }
-    }
-
-    globs->pipelineFloorShadow->use(cmd);
-    globs->pushConstants->set(cmd, "doingShadow", 1);
-    for (auto& m : globs->room) {
-        if (m->name == "floor") {
-            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
-        }
-    }
-
-    */
-
-
-
-   
-
-   
-
     // START: Flare Lab
-    /*
-
-    vec3 lightPos = globs->lightPositionAndDirectionalFlag[0].xyz();
+    
     float lightIsPositional = globs->lightPositionAndDirectionalFlag[0].w;
     if (!lightIsPositional) {
         //directional, so lightPositionAndDirectionalFlag
@@ -219,12 +175,7 @@ void draw(Globals* globs)
         alpha = 0.0f;
 
 
-    vec3 sunup(0, 1, 0);
-    vec3 sunlook = lightPos - globs->camera->eye;
-    if (dot(sunlook, sunup) < 0.1)
-        sunup = vec3(0, 0, 1);
-    globs->suncamera->lookAt(globs->camera->eye, lightPos, sunup);
-    globs->suncamera->setUniforms(globs->uniforms);
+    
     globs->uniforms->set("viewMatrix", mat4::identity());
     globs->uniforms->set("projMatrix", mat4::identity());
     globs->uniforms->set("viewProjMatrix", mat4::identity());
@@ -252,10 +203,8 @@ void draw(Globals* globs)
             globs->descriptorSet, globs->flares[textureIndex]);
     }
 
-
-
     
-    */
+    
     // END: Flare Lab
 
     globs->framebuffer->endRenderPass(cmd);

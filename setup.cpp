@@ -43,15 +43,7 @@ void setup(Globals* globs)
         100.0f          //yon
     );
 
-    globs->suncamera = new Camera(
-        vec3(0, 1, 2),    //eye
-        vec3(0, 0, 0),    //coi
-        vec3(0, 1, 0),    //up
-        radians(35.0f), //field of view
-        1.0f,           //aspect ratio
-        0.1f,           //hither
-        100.0f          //yon
-    );
+    
 
     globs->vertexManager = new VertexManager(
         globs->ctx,
@@ -141,12 +133,12 @@ void setup(Globals* globs)
     // skybox code
     globs->interiorEnviormentMap = ImageManager::loadCube(
         {
-            "assets/kitchenMap/nx.jpg",
-            "assets/kitchenMap/ny.jpg",
-            "assets/kitchenMap/nz.jpg",
-            "assets/kitchenMap/px.jpg",
-            "assets/kitchenMap/py.jpg",
-            "assets/kitchenMap/pz.jpg"
+            "assets/skymap/nx.jpg",
+            "assets/skymap/ny.jpg",
+            "assets/skymap/nz.jpg",
+            "assets/skymap/px.jpg",
+            "assets/skymap/py.jpg",
+            "assets/skymap/pz.jpg"
         }
     );
 
@@ -175,88 +167,6 @@ void setup(Globals* globs)
 
     // end skybox code
 
-    /*
-    globs->pipelineNonFloor = new GraphicsPipeline(
-        globs->ctx,
-        "nonfloor pipe",
-        globs->pipelineLayout,
-        PipelineOption{ .shader = ShaderManager::load("shaders/main.vert") },
-        PipelineOption{ .shader = ShaderManager::load("shaders/main.frag") },
-        PipelineOption{ .vertexInputState = globs->vertexManager->inputState }
-    );
-
-    globs->pipelineFloor = new GraphicsPipeline(
-        globs->ctx,
-        "floor pipe",
-        globs->pipelineLayout,
-        PipelineOption{ .shader = ShaderManager::load("shaders/main.vert") },
-        PipelineOption{ .shader = ShaderManager::load("shaders/main.frag") },
-        PipelineOption{ .vertexInputState = globs->vertexManager->inputState },
-        PipelineOption{ .stencilTestEnable = 1 },
-        PipelineOption{
-            .stencilFrontAndBack = VkStencilOpState{
-                .failOp = VK_STENCIL_OP_KEEP,
-                .passOp = VK_STENCIL_OP_REPLACE,
-                .depthFailOp = VK_STENCIL_OP_KEEP,
-                .compareOp = VK_COMPARE_OP_ALWAYS,
-                .compareMask = 0xff,
-                .writeMask = 0xff,
-                .reference = 1
-            }
-        }
-    );
-
-    globs->pipelineShadow = new GraphicsPipeline(
-        globs->ctx,
-        "shadow pipe",
-        globs->pipelineLayout,
-        PipelineOption{ .shader = ShaderManager::load("shaders/shadow.vert") },
-        PipelineOption{ .shader = ShaderManager::load("shaders/shadow.frag") },
-        PipelineOption{ .vertexInputState = globs->vertexManager->inputState },
-        PipelineOption{ .depthTestEnable = 0 },
-        PipelineOption{ .stencilTestEnable = 1 },
-        PipelineOption{
-            .stencilFrontAndBack = VkStencilOpState{
-                .failOp = VK_STENCIL_OP_KEEP,
-                .passOp = VK_STENCIL_OP_INCREMENT_AND_CLAMP,
-                .depthFailOp = VK_STENCIL_OP_KEEP,
-                .compareOp = VK_COMPARE_OP_EQUAL,
-                .compareMask = 0xff,
-                .writeMask = 0xff,
-                .reference = 1
-            }
-        },
-        PipelineOption{ .blendEnable = 1 },
-        PipelineOption{ .srcColorBlendFactor = VK_BLEND_FACTOR_ZERO },
-        PipelineOption{ .dstColorBlendFactor = VK_BLEND_FACTOR_ONE }
-    );
-
-    globs->pipelineFloorShadow = new GraphicsPipeline(
-        globs->ctx,
-        "floor shadow pipe",
-        globs->pipelineLayout,
-        PipelineOption{ .shader = ShaderManager::load("shaders/main.vert") },
-        PipelineOption{ .shader = ShaderManager::load("shaders/main.frag") },
-        PipelineOption{ .vertexInputState = globs->vertexManager->inputState },
-        PipelineOption{ .depthTestEnable = 0 },
-        PipelineOption{ .stencilTestEnable = 1 },
-        PipelineOption{
-            .stencilFrontAndBack = VkStencilOpState{
-                .failOp = VK_STENCIL_OP_KEEP,
-                .passOp = VK_STENCIL_OP_KEEP,
-                .depthFailOp = VK_STENCIL_OP_KEEP,
-                .compareOp = VK_COMPARE_OP_EQUAL,
-                .compareMask = 0xff,
-                .writeMask = 0xff,
-                .reference = 2
-            }
-        },
-        PipelineOption{ .blendEnable = 1 },
-        PipelineOption{ .srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA },
-        PipelineOption{ .dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA }
-    );
-
-    */
 
     // Flare Lab
     globs->flarePipeline = new GraphicsPipeline(
@@ -337,8 +247,8 @@ void setup(Globals* globs)
         "main uniforms"
     );
 
-    globs->room = gltf::load("assets/kitchen.glb",globs->vertexManager);
-    auto lights = gltf::getLights("assets/kitchen.glb");
+    globs->room = gltf::load("assets/trees3.glb",globs->vertexManager);
+    auto lights = gltf::getLights("assets/trees3.glb");
     // Flare Lab
 
     globs->glowTexture = ImageManager::load("assets/sunGlow.png");
@@ -368,6 +278,15 @@ void setup(Globals* globs)
         0, 0, -0.3135, 0);
     */
 
+    globs->suncamera = new Camera(
+        vec3(0, 1, 2),    //eye
+        lights[0].position,    //coi
+        vec3(0, 1, 0),    //up
+        radians(4.0f), //field of view
+        1.0f,           //aspect ratio
+        0.1f,           //hither
+        100.0f          //yon
+    );
 
     for( Light L : lights ){
 
