@@ -206,13 +206,19 @@ void main(){
     ec = ec * emissiveFactor;
 
 
-    c.rgb = c.rgb * (ambient + totaldp) + totalsp ;
+     c.rgb = c.rgb * (ambient + totaldp) + totalsp ;
     c.rgb += ec.rgb;
     c.rgb = clamp(c.rgb, vec3(0.0), vec3(1.0));
 	
     color = c;
 	
-	color.rgb += metalicity * reflectionColor;
+	if (doingReflections != 2){
+		color.rgb += pow(1.0-roughness,4.0) * metalicity * reflectionColor;
+	}
+
+	
+	if( doingReflections == 2 )
+		color.a *= 0.85;
 
 
 	float X = 0.4124564*color.r + 0.3575761*color.g + 0.1804375*color.b ;
