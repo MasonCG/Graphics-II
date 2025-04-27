@@ -35,14 +35,14 @@ void draw(Globals* globs)
 
     globs->text->update(cmd);
 
-    globs->offscreen->beginRenderPassClearContents(cmd, 0, 1, 0, 1); //0.2f, 0.4f, 0.6f, 1.0f );
+    globs->offscreen->beginRenderPassClearContents(cmd, 0, 0, 0, 0); //0.2f, 0.4f, 0.6f, 1.0f );
 
     globs->descriptorSet->bind(cmd);
     globs->vertexManager->bindBuffers(cmd);
 
     globs->camera->setUniforms(globs->uniforms);
 
-    globs->uniforms->set( "attenuation", vec3(100,1,100) );
+    globs->uniforms->set( "attenuation", vec3(75,1,100) );
     globs->uniforms->set( "lightPositionAndDirectionalFlag", globs->lightPositionAndDirectionalFlag );
     globs->uniforms->set( "lightColorAndIntensity", globs->lightColorAndIntensity );
     globs->uniforms->set( "cosSpotAngles", globs->cosSpotAngles );
@@ -53,9 +53,8 @@ void draw(Globals* globs)
 
     globs->pipeline->use(cmd);
 
-  
 
-    
+
     for (auto& m : globs->room) {
         m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
     }
@@ -77,10 +76,6 @@ void draw(Globals* globs)
 
 
     globs->offscreen->endRenderPass(cmd);
-
-    //blur lab
-    globs->offscreen->blur(1, 0, 1.0f, cmd, globs->vertexManager);
-
 
     globs->vertexManager->bindBuffers(cmd);
 

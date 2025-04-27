@@ -199,17 +199,11 @@ void main(){
         totaldp += dp ;
         totalsp += sp ;
     }
-	
-	
-	
-	
 
     vec3 ec = texture(
         sampler2DArray(emitTexture,mipSampler), tc
     ).rgb;
     ec = ec * emissiveFactor;
-	
-	
 
 
     c.rgb = c.rgb * (ambient + totaldp) + totalsp ;
@@ -220,6 +214,18 @@ void main(){
 	
 	color.rgb += metalicity * reflectionColor;
 
+
+	float X = 0.4124564*color.r + 0.3575761*color.g + 0.1804375*color.b ;
+	float Y = 0.2126729*color.r + 0.7151522*color.g + 0.0721750*color.b ;
+	float Z = 0.0193339*color.r + 0.1191920*color.g + 0.9503041*color.b ;
+	float total = X+Y+Z;
+	if( total == 0 ){
+		color.rgb = vec3(0);
+	} else {
+		float x = X/total;
+		float y = Y/total;
+		color.rgb = vec3(x,y,Y);
+	}
 
 
 }

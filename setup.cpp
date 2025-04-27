@@ -180,8 +180,8 @@ void setup(Globals* globs)
         globs->ctx,
         "blit pipe",
         globs->pipelineLayout,
-        PipelineOption{ .shader = ShaderManager::load("shaders/blit.vert") },
-        PipelineOption{ .shader = ShaderManager::load("shaders/blit.frag") },
+        PipelineOption{ .shader = ShaderManager::load("shaders/tonemapping.vert") },
+        PipelineOption{ .shader = ShaderManager::load("shaders/tonemapping.frag") },
         PipelineOption{ .vertexInputState = globs->vertexManager->inputState }
     );
 
@@ -211,14 +211,8 @@ void setup(Globals* globs)
     // framebuffer and FBO Lab
     globs->blitSquare = new BlitSquare(globs->vertexManager);
 
-    // blur lab
-    globs->offscreen = new BlurrableFramebuffer(
-        globs->ctx,
-        globs->width, globs->height, //width, height
-        1,                          //num layers
-        VK_FORMAT_R8G8B8A8_UNORM,   //format
-        "fbo"                       //debugging name
-    );
+    globs->offscreen = new Framebuffer( globs->ctx, 512,512,1, VK_FORMAT_R16G16B16A16_SFLOAT, "fbo");
+
 
 
 

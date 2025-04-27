@@ -72,9 +72,8 @@ class Globals{
     GraphicsPipeline* pipelineFloorShadow;
 
     // framebuffer FBO Lab
-    BlurrableFramebuffer* offscreen;
+    Framebuffer* offscreen;
     GraphicsPipeline* blitPipe;
     BlitSquare* blitSquare;
-
 
 };
