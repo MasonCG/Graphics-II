@@ -26,6 +26,8 @@ layout(set=0,binding=ENVMAP_TEXTURE_SLOT) uniform textureCube environmentMap;
 
 
 layout(location=0) out vec4 color;
+layout(location=1) out vec4 glow;
+
 
 
 
@@ -210,7 +212,9 @@ void main(){
     ec = ec * emissiveFactor;
 	
 	
-
+	vec4 e =texture(
+        sampler2DArray(emitTexture,mipSampler), tc
+    );	
 
     c.rgb = c.rgb * (ambient + totaldp) + totalsp ;
     c.rgb += ec.rgb;
@@ -220,7 +224,12 @@ void main(){
 
 	color.rgb += pow(1.0-roughness,4.0) * metalicity * reflectionColor;
 
-
+	float biggest = max( color.r, max( color.g, color.b ) );
+    float glowAmount = smoothstep(
+        glowThreshold, 1.0, biggest
+    );
+    glow.rgb = glowAmount * color.rgb;
+    glow.a = 1.0;
 
 
 }
