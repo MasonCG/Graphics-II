@@ -204,8 +204,8 @@ void setup(Globals* globs)
         "main uniforms"
     );
 
-    globs->room = gltf::load("assets/room6.glb",globs->vertexManager);
-    auto lights = gltf::getLights("assets/room6.glb");
+    globs->room = gltf::load("assets/kitchen.glb",globs->vertexManager);
+    auto lights = gltf::getLights("assets/kitchen.glb");
   
     // framebuffer and FBO Lab
     globs->blitSquare = new BlitSquare(globs->vertexManager);
