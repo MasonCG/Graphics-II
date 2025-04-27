@@ -76,4 +76,7 @@ class Globals{
     GraphicsPipeline* blitPipe;
     BlitSquare* blitSquare;
 
+    //for reflection
+    mat4 reflectionMatrix;
+    vec4 reflectionPlane;
 };

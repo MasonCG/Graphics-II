@@ -163,7 +163,86 @@ void setup(Globals* globs)
         PipelineOption{ .vertexInputState = globs->vertexManager->inputState }
     );
 
-    // end skybox code
+    vec3 N = vec3(0, 1, 0);
+    float D = 2.1188;
+    globs->reflectionPlane = vec4(N, D);
+
+    globs->reflectionMatrix = mat4(
+        1 - 2 * N.x * N.x, -2 * N.x * N.y, -2 * N.x * N.z, 0,
+        -2 * N.x * N.y, 1 - 2 * N.y * N.y, -2 * N.y * N.z, 0,
+        -2 * N.x * N.z, -2 * N.y * N.z, 1 - 2 * N.z * N.z, 0,
+        -2 * D * N.x, -2 * D * N.y, -2 * D * N.z, 1
+    );
+
+    globs->floorPipeline1 = new GraphicsPipeline(
+        globs->ctx,
+        "floor pipe 1",
+        globs->pipelineLayout,
+        PipelineOption{ .shader = ShaderManager::load("shaders/main.vert") },
+        PipelineOption{ .shader = ShaderManager::load("shaders/main.frag") },
+        PipelineOption{ .vertexInputState = globs->vertexManager->inputState },
+        PipelineOption{ .blendEnable = 1 },
+        PipelineOption{ .srcColorBlendFactor = VK_BLEND_FACTOR_ZERO },
+        PipelineOption{ .dstColorBlendFactor = VK_BLEND_FACTOR_ONE },
+        PipelineOption{ .stencilTestEnable = 1 },
+        PipelineOption{
+            .stencilFrontAndBack = VkStencilOpState{
+                .failOp = VK_STENCIL_OP_KEEP,
+                .passOp = VK_STENCIL_OP_REPLACE,
+                .depthFailOp = VK_STENCIL_OP_KEEP,
+                .compareOp = VK_COMPARE_OP_ALWAYS,
+                .compareMask = 0xff,
+                .writeMask = 0xff,
+                .reference = 1
+            }
+        }
+    );
+
+    globs->reflectedObjectsPipeline = new GraphicsPipeline(
+        globs->ctx,
+        "reflectedObjectsPipeline",
+        globs->pipelineLayout,
+        PipelineOption{ .shader = ShaderManager::load("shaders/main.vert") },
+        PipelineOption{ .shader = ShaderManager::load("shaders/main.frag") },
+        PipelineOption{ .vertexInputState = globs->vertexManager->inputState },
+        PipelineOption{ .stencilTestEnable = 1 },
+        PipelineOption{
+            .stencilFrontAndBack = VkStencilOpState{
+                .failOp = VK_STENCIL_OP_KEEP,
+                .passOp = VK_STENCIL_OP_KEEP,
+                .depthFailOp = VK_STENCIL_OP_KEEP,
+                .compareOp = VK_COMPARE_OP_EQUAL,
+                .compareMask = 0xff,
+                .writeMask = 0xff,
+                .reference = 1
+            }
+        }
+    );
+
+    globs->floorPipeline2 = new GraphicsPipeline(
+        globs->ctx,
+        "floor pipe 2",
+        globs->pipelineLayout,
+        PipelineOption{ .shader = ShaderManager::load("shaders/main.vert") },
+        PipelineOption{ .shader = ShaderManager::load("shaders/main.frag") },
+        PipelineOption{ .vertexInputState = globs->vertexManager->inputState },
+        PipelineOption{ .blendEnable = 1 },
+        PipelineOption{ .srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA },
+        PipelineOption{ .dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA },
+        PipelineOption{ .stencilTestEnable = 1 },
+        PipelineOption{ .depthTestEnable = 0 },
+        PipelineOption{
+            .stencilFrontAndBack = VkStencilOpState{
+                .failOp = VK_STENCIL_OP_KEEP,
+                .passOp = VK_STENCIL_OP_KEEP,
+                .depthFailOp = VK_STENCIL_OP_KEEP,
+                .compareOp = VK_COMPARE_OP_EQUAL,
+                .compareMask = 0xff,
+                .writeMask = 0xff,
+                .reference = 1
+            }
+        }
+    );
   
 
     // framebuffering and FBO lab & blur lab

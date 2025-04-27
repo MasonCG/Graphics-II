@@ -48,6 +48,8 @@ void draw(Globals* globs)
     globs->uniforms->set( "cosSpotAngles", globs->cosSpotAngles );
     globs->uniforms->set( "spotDirection", globs->spotDirection );
     globs->uniforms->set("flattenMatrix", globs->flattenMatrix);
+    globs->uniforms->set("reflectionMatrix", globs->reflectionMatrix);
+
 
     globs->uniforms->bind(cmd,globs->descriptorSet);
 
