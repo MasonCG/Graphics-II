@@ -26,6 +26,7 @@ layout(set=0,binding=ENVMAP_TEXTURE_SLOT) uniform textureCube environmentMap;
 
 
 layout(location=0) out vec4 color;
+layout(location=1) out vec4 color2;
 
 
 
@@ -220,6 +221,6 @@ void main(){
 	
 	color.rgb += metalicity * reflectionColor;
 
-
+	color2 = color;
 
 }

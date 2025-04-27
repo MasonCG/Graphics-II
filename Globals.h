@@ -71,24 +71,13 @@ class Globals{
     GraphicsPipeline* pipelineShadow;
     GraphicsPipeline* pipelineFloorShadow;
 
-    //for reflection
-
-
     // framebuffer FBO Lab
     BlurrableFramebuffer* offscreen;
     GraphicsPipeline* blitPipe;
     BlitSquare* blitSquare;
 
+    //depth of field lab
+    float focalDistance;
 
-    // Flare Lab
-    Image* glowTexture;
-    GraphicsPipeline* flarePipeline;
-    GraphicsPipeline* blackSunPipe;
-    GraphicsPipeline* whiteSunPipe;
-    Image* flares[3];
-    Framebuffer* sunfbo;
-    Camera* suncamera;
-
-    // blur lab
 
 };

@@ -52,6 +52,17 @@ void update(Globals* globs, float elapsed)
                     std::cout << "up:  " << globs->camera->up.x << " " << globs->camera->up.y << " " << globs->camera->up.z << "\n";
                 }
             }
+
+            //changing focal distance for DOF lab
+
+            if (k == SDLK_1) {
+                globs->focalDistance += 0.2;
+            }
+            
+            if (k == SDLK_2) {
+                globs->focalDistance -= 0.2;
+            }
+
             if(k == SDLK_TAB){
                 globs->mouseLook = ! globs->mouseLook;
                 if(globs->mouseLook)

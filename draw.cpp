@@ -35,7 +35,7 @@ void draw(Globals* globs)
 
     globs->text->update(cmd);
 
-    globs->offscreen->beginRenderPassClearContents(cmd, 0, 1, 0, 1); //0.2f, 0.4f, 0.6f, 1.0f );
+    globs->offscreen->beginRenderPassClearContents(cmd, 0.0f, 0.0f, 0.0f, 0.0f);
 
     globs->descriptorSet->bind(cmd);
     globs->vertexManager->bindBuffers(cmd);
@@ -48,6 +48,7 @@ void draw(Globals* globs)
     globs->uniforms->set( "cosSpotAngles", globs->cosSpotAngles );
     globs->uniforms->set( "spotDirection", globs->spotDirection );
     globs->uniforms->set("flattenMatrix", globs->flattenMatrix);
+    globs->uniforms->set("focalDistance", globs->focalDistance);
 
     globs->uniforms->bind(cmd,globs->descriptorSet);
 
@@ -79,7 +80,7 @@ void draw(Globals* globs)
     globs->offscreen->endRenderPass(cmd);
 
     //blur lab
-    globs->offscreen->blur(1, 0, 1.0f, cmd, globs->vertexManager);
+    globs->offscreen->blur(15, 1, 1.0f, cmd, globs->vertexManager);
 
 
     globs->vertexManager->bindBuffers(cmd);
@@ -87,7 +88,8 @@ void draw(Globals* globs)
     globs->framebuffer->beginRenderPassClearContents(cmd, 0.2f, 0.4f, 0.6f, 1.0f);
 
     globs->blitPipe->use(cmd);
-
+    globs->descriptorSet->setSlot(DEPTH_TEXTURE_SLOT,
+        globs->offscreen->currentDepthBufferView());
     globs->blitSquare->draw(
         globs->ctx,
         cmd,

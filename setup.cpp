@@ -104,7 +104,7 @@ void setup(Globals* globs)
             DescriptorSetEntry(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
                                 ENVMAP_TEXTURE_SLOT),
              DescriptorSetEntry(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
-                                SUNFBO_TEXTURE_SLOT)
+                                DEPTH_TEXTURE_SLOT)
         }
     );
 
@@ -204,6 +204,9 @@ void setup(Globals* globs)
         "main uniforms"
     );
 
+
+    globs->focalDistance = 4.0f;
+
     globs->room = gltf::load("assets/kitchen.glb",globs->vertexManager);
     auto lights = gltf::getLights("assets/kitchen.glb");
 
@@ -215,7 +218,7 @@ void setup(Globals* globs)
     globs->offscreen = new BlurrableFramebuffer(
         globs->ctx,
         globs->width, globs->height, //width, height
-        1,                          //num layers
+        2,                          //num layers
         VK_FORMAT_R8G8B8A8_UNORM,   //format
         "fbo"                       //debugging name
     );
