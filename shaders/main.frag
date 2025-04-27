@@ -217,9 +217,8 @@ void main(){
     c.rgb = clamp(c.rgb, vec3(0.0), vec3(1.0));
 	
     color = c;
-
-	color.rgb += pow(1.0-roughness,4.0) * metalicity * reflectionColor;
-
+	
+	color.rgb += metalicity * reflectionColor;
 
 
 
