@@ -6,4 +6,5 @@ layout(push_constant,row_major) uniform pushConstants {
 	float metallicFactor;
 	float roughnessFactor;
 	int doingShadow;
+	int doingReflections;
 };

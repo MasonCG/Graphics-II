@@ -49,6 +49,7 @@ void draw(Globals* globs)
     globs->uniforms->set( "spotDirection", globs->spotDirection );
     globs->uniforms->set("flattenMatrix", globs->flattenMatrix);
     globs->uniforms->set("reflectionMatrix", globs->reflectionMatrix);
+    globs->uniforms->set("reflectionPlane", globs->reflectionPlane);
 
 
     globs->uniforms->bind(cmd,globs->descriptorSet);
@@ -60,60 +61,6 @@ void draw(Globals* globs)
     for (auto& m : globs->room) {
         m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
     }
-
-    globs->floorPipeline1->use(cmd);
-    for (auto& m : globs->room) {
-        if (m->name == "floor")
-            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
-    }
-
-    //clear depth buffer only
-
-    VkClearAttachment clearInfo = {
-        .aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT,
-        .colorAttachment = 0,
-        .clearValue = VkClearColorValue {
-            .float32 = {1.0f, 1.0f, 1.0f, 1.0f }
-        }
-    };
-
-    VkClearRect clearRect = {
-        .rect = VkRect2D {
-            .offset = VkOffset2D {
-                .x = 0,
-                .y = 0
-            },
-            .extent = VkExtent2D {
-                .width = (unsigned)globs->width,
-                .height = (unsigned)globs->height
-            }
-        },
-        .baseArrayLayer = 0,
-        .layerCount = 1
-    };
-    vkCmdClearAttachments(cmd,
-        1,  //one attachment
-        &clearInfo,
-        1,  //rectangle count
-        &clearRect
-    );
-
-    globs->pushConstants->set(cmd, "doingReflections", 1);
-    globs->reflectedObjectsPipeline->use(cmd);
-    for (auto& m : globs->room) {
-        if (m->name != "floor") {
-            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
-        }
-    }
-
-    globs->pushConstants->set(cmd, "doingReflections", 2);
-    globs->floorPipeline2->use(cmd);
-    for (auto& m : globs->room) {
-        if (m->name == "floor") {
-            m->draw(globs->ctx, cmd, globs->descriptorSet, globs->pushConstants);
-        }
-    }
-
 
     // drawing skybox last
     globs->skyboxPipeline->use(cmd);

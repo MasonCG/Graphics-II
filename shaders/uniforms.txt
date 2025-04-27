@@ -9,6 +9,8 @@ layout(set=0,binding=UNIFORM_SLOT,std140,row_major) uniform UBO{
     mat4 viewProjMatrix;
     vec3 attenuation;
     vec3 eyePosition;
+	mat4 reflectionMatrix;
+	vec4 reflectionPlane;
 
     vec4 lightPositionAndDirectionalFlag[MAX_LIGHTS];
     vec4 lightColorAndIntensity[MAX_LIGHTS];

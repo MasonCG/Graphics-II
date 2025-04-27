@@ -140,6 +140,15 @@ vec3 doBumpMapping(vec3 b, vec3 N)
 
 
 void main(){
+
+	
+	if( doingReflections == 1 ){
+        if( dot(vec4(worldPosition,1.0),reflectionPlane) < 0 ){
+            discard;
+            return;
+        }
+    }
+
 	vec3 b = texture(sampler2DArray(normalTexture, mipSampler),
                     vec3(texcoord2,0.0) ).xyz;
 
@@ -217,10 +226,11 @@ void main(){
 	}
 
 	
-	if( doingReflections == 2 )
+	if( doingReflections == 2 ){
 		color.a *= 0.85;
-
-
+	}
+	
+	
 	float X = 0.4124564*color.r + 0.3575761*color.g + 0.1804375*color.b ;
 	float Y = 0.2126729*color.r + 0.7151522*color.g + 0.0721750*color.b ;
 	float Z = 0.0193339*color.r + 0.1191920*color.g + 0.9503041*color.b ;
