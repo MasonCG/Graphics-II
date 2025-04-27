@@ -78,5 +78,8 @@ class Globals{
 
     //for reflection
     mat4 reflectionMatrix;
+    GraphicsPipeline* floorPipeline1;
+    GraphicsPipeline* reflectedObjectsPipeline;
+    GraphicsPipeline* floorPipeline2;
     vec4 reflectionPlane;
 };
